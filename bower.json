@@ -6,7 +6,9 @@
         "modernizr": "~2.6.2",
         "jquery": "~1.10.2",
         "zepto": "latest",
-        "requirejs": "latest"
+        "requirejs": "latest",
+        "jquery-pjax": "latest",
+        "pie": "latest"
     },
     "devDependencies": {}
 }

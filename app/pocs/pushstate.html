@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>PJAX POC</title>
+</head>
+
+<body>
+    <div class="container">
+        <button id="backbtn">Backward</button>
+        <button id="fwdbtn">Forward</button>
+
+        <div>
+            <span>current state:</span>
+            <span id='state'></span>
+        </div>
+    </div>
+    <script src="../bower_components/requirejs/require.js">
+    </script>
+    <script>
+    require(['../scripts/main'], function() {
+        require(['jquery', 'pjax'], function() {
+            //without pjax
+
+            //https://developer.mozilla.org/zh-CN/docs/DOM/Manipulating_the_browser_history
+            var pageIdx = 0;
+            $('#fwdbtn').on('click', function() {
+                pageIdx++;
+                history.pushState({
+                    idx: pageIdx
+                }, 'Page ' + pageIdx, '?page' + pageIdx + '.html');
+
+                $('#state').text('Page is ' + pageIdx);
+            });
+            $('#backbtn').on('click', function() {
+                history.back();
+                pageIdx--;
+            });
+            //1. state, 2. page title, 3. url fragment
+            window.onpopstate = function(event) {
+                console.log('event is ', event.state);
+                if (event.state) {
+                    $('#state').text('Page is ' + event.state.idx);
+                }
+            };
+        });
+    });
+    </script>
+</body>
+
+</html>

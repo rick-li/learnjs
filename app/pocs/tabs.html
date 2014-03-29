@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>TABS POC</title>
+</head>
+
+<body>
+    <span>Page Header</span>
+    <style>
+    .cvmTabNav {
+        margin: 10px;
+        border-bottom: solid 1px;
+    }
+    .cvmTabNav:after {
+        display: block;
+        content:'.';
+        height: 0;
+        clear: both;
+        visibility: none;
+    }
+    .cvmTabNav li {
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #b2e1ff), color-stop(100%, #66b6fc));
+        -pie-background: linear-gradient(#b2e1ff, #66b6fc 70%);
+        position: relative;
+        float: left;
+        border-radius: 5px 5px 0 0;
+        margin-right: 5px;
+        border: solid 1px;
+        border-bottom-width: 0px;
+        padding: 5px 2px;
+        behavior: url('../scripts/PIE.htc');
+        /*PIE is relative to html*/
+    }
+    </style>
+    <ul class="cvmTabNav">
+        <li>Rates</li>
+        <li>Emerg Mkt</li>
+        <li>Credit</li>
+    </ul>
+</body>
+
+</html>

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>PJAX POC</title>
+</head>
+
+<body>
+    <span>Page Header</span>
+    <div id="container-pjax">
+        <a href="./someTpl.html" data-pjax="#container-pjax">Click me for pjax</a>
+        <div>
+
+            <div id="pageContent"></div>
+        </div>
+
+    </div>
+    <script src="../bower_components/requirejs/require.js">
+    </script>
+    <script>
+    require(['../scripts/main'], function() {
+        require(['pjax'], function() {
+            // https://github.com/defunkt/jquery-pjax
+            // $('#pageContent').pjax('a', '?pjax-container');
+            $('#container-pjax').pjax('a', '#container-pjax');
+        });
+    });
+    </script>
+</body>
+
+</html>
