@@ -1,0 +1,16 @@
+{
+  "name": "jslearn-node",
+  "version": "0.0.0",
+  "dependencies": {},
+  "devDependencies": {
+    "http-proxy": "latest",
+    "connect": "latest",
+    "proxy-middleware": "latest",
+    "cookie": "latest",
+    "underscore": "latest",
+    "regexp-quote": "latest",
+    "request": "latest",
+    "Q": "latest",
+    "url-pattern": "latest"
+  }
+}
