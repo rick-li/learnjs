@@ -1,6 +1,6 @@
 {
   "name": "socketio-node",
-  "version": "0.0.0",
+  "version": "0.0.0-5",
   "dependencies": {
     "underscore": "latest",
     "request": "latest",
@@ -11,5 +11,12 @@
     "jade": "*",
     "mongoose": "latest"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "subdomain": "rickli-chat",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": "0.10.x"
+  }
 }
