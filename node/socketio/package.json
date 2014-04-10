@@ -5,7 +5,7 @@
   "devDependencies": {
     "underscore": "latest",
     "request": "latest",
-    "Q": "latest",
+    "q": "latest",
     "url-pattern": "latest",
     "socket.io": "latest",
     "express": "3.5.1",
