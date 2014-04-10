@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Left nav</title>
+    <style>
+    .sidebar {
+        position: fixed;
+        width: 200px;
+        height: 600px;
+        border: solid 1px;
+        background-color: green;
+    }
+    .nav-tools {
+        height: 50px;
+    }
+    #nav-toggle {
+    }
+    .content {
+        position: relative;
+        border: solid 1px;
+        background-color: blue;
+        height: 600px;
+        z-index: 10;
+    }
+    </style>
+    <script src="../bower_components/requirejs/require.js">
+    </script>
+    <script>
+    require(['../scripts/main'], function() {
+        require(['jquery'], function() {
+
+            $('#nav-toggle').on('click', function() {
+                var content = $('.content');
+                var slideOffset;
+                if (content.hasClass('.opened')) {
+                    content.removeClass('.opened');
+                    slideOffset = 0;
+                } else {
+                    content.addClass('.opened');
+                    slideOffset = $('.sidebar').width();
+                }
+
+                content.css({
+                    'webkitTransform': 'translate3d(' + slideOffset + 'px,0,0)',
+                    'webkitTransition': 'all 0.5s ease'
+                })
+            });
+        });
+    });
+    </script>
+
+</head>
+
+<body>
+    <div class="all-elements">
+        <div class="sidebar">
+
+        </div>
+        <div class="content">
+            <div class="nav-tools">
+                <button id="nav-toggle">
+                    Toggle
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>

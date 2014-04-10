@@ -1,0 +1,23 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    div afasdfasfdasfk
+    - var numbers = [1,2,3,4,5];
+    - numbers.forEach(function(n){
+    -   console.log('number is %s;\n', n);
+    - });
+    #users
+      div: p: div dfhakfhaksdfhakshfk
+        | asdfajldfjalf
+        | asdljfalf
+        | adflajdlf
+        | jdsalfjaljfl
+      for user in users
+        include user
+
+    #numbers
+      for n in numbers
+        p= n  //assignment
