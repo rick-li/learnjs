@@ -56,11 +56,18 @@
   <script src="socket.io-client/dist/socket.io.min.js"></script>
   <script>
   $(document).ready(function() {
+    if (typeof console === 'undefined') {
+      window.console = {
+        log: function() {}
+      };
+    }
     $('.content').css({
       height: $('.content').height()
     });
     //==============Handles connection =======================
-    var socket = io.connect('http://localhost:3000');
+    var socketUrl = window.location.protocol + '//' + window.location.host;
+    console.log('socketUrl:' + socketUrl);
+    var socket = io.connect(socketUrl);
     socket.on('connect', function(status) {
       console.log("Connected");
       $('.header span').text('CONNECTED');

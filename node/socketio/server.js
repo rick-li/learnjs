@@ -1,10 +1,18 @@
 var path = require('path');
 var express = require('express');
+
 var app = require('express')();
-app.set('port', process.env.PORT || 3000);
+console.log('ENV is ', process.env.NODE_ENV);
+var port = (process.env.NODE_ENV == 'local') ? 3000 : 80;
+console.log('Use port ', port);
+app.set('port', port);
 // console.log(__dirname + '');
 app.use(express.static(__dirname));
-var server = require('http').createServer(app).listen(app.get('port'));
+app.use(app.router);
+app.use(express.json());
+
+
+var server = require('http').createServer(app).listen(port);
 var io = require('socket.io').listen(server);
 
 
@@ -17,5 +25,4 @@ io.sockets.on('connection', function(socket) {
     data.address = address;
     io.sockets.emit('serverMsg', data);
   });
-
 });
