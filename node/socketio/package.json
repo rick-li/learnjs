@@ -1,8 +1,7 @@
 {
   "name": "socketio-node",
   "version": "0.0.0",
-  "dependencies": {},
-  "devDependencies": {
+  "dependencies": {
     "underscore": "latest",
     "request": "latest",
     "q": "latest",
@@ -11,5 +10,6 @@
     "express": "3.5.1",
     "jade": "*",
     "mongoose": "latest"
-  }
+  },
+  "devDependencies": {}
 }
