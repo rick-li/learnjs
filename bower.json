@@ -7,8 +7,12 @@
         "jquery": "~1.10.2",
         "zepto": "latest",
         "requirejs": "latest",
+        "requirejs-text": "latest",
         "jquery-pjax": "latest",
-        "pie": "latest"
+        "pie": "latest",
+        "ng-grid": "latest",
+        "datatables": "latest",
+        "snapjs": "latest"
     },
     "devDependencies": {}
 }

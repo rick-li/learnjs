@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>SocketIO Test</title>
+  <style>
+  html, body {
+    height: 100%;
+  }
+  .header {
+    height: 30px;
+  }
+  .container {
+    height: 100%;
+    margin: 0 10px;
+  }
+  .content {
+    height: 80%;
+    overflow-y: auto;
+  }
+  .content .msg {
+    height: 30px;
+  }
+  .textinput {
+    height: 50px;
+  }
+  .textinput input {
+    width: 80%;
+    height: 100%;
+  }
+  .textinput button {
+    width: 15%;
+    height: 100%;
+  }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      STATUS:
+      <span>DISCONNECTED</span>
+    </div>
+    <div class="content"></div>
+    <div class="textinput">
+      <input type="text">
+      <button>
+        Send
+      </button>
+    </div>
+
+  </div>
+
+  <script src="jquery.min.js"></script>
+  <script src="socket.io-client/dist/socket.io.min.js"></script>
+  <script>
+  $(document).ready(function() {
+    $('.content').css({
+      height: $('.content').height()
+    });
+    //==============Handles connection =======================
+    var socket = io.connect('http://localhost:3000');
+    socket.on('connect', function(status) {
+      console.log("Connected");
+      $('.header span').text('CONNECTED');
+    });
+    socket.on('disconnect', function() {
+      console.log("Disconnected");
+      $('.header span').text('DISCONNECTED');
+    });
+    //==============Handles connection =======================
+    var textInput = $('.textinput input');
+    var content = $('.content');
+
+    $('.textinput button').on('click', function() {
+      if (textInput.val()) {
+        socket.emit('clientMsg', {
+          text: textInput.val()
+        });
+        textInput.val('');
+      }
+    });
+    socket.on('serverMsg', function(data) {
+      console.log('Received from server ', data);
+      var msgDiv = '<div class="msg">' +
+        data.text + '</div>';
+      content.append($(msgDiv));
+    });
+  });
+  </script>
+</body>
+
+</html>

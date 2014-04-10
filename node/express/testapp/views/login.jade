@@ -1,0 +1,25 @@
+extends layout
+
+block content
+
+  .wrapper
+    form
+      div
+        span name:
+        input(name="name")
+      div
+        span password:
+        input(name="password")
+      div
+        button#loginBtn login
+  script.
+      $('#loginBtn').on('click', function(e){
+        console.log('click on login button.');
+        $.post('/login').done(function(){
+          window.location = '/admin/items';
+        });
+        e.preventDefault();
+      });
+
+     
+    

@@ -5,13 +5,16 @@
   "devDependencies": {
     "http-proxy": "latest",
     "connect": "latest",
-    "connect-route": "latest",
     "proxy-middleware": "latest",
     "cookie": "latest",
     "underscore": "latest",
     "regexp-quote": "latest",
     "request": "latest",
     "Q": "latest",
-    "url-pattern": "latest"
+    "url-pattern": "latest",
+    "mysql": "latest",
+    "socket.io": "latest",
+    "express": "3.5.1",
+    "jade": "*"
   }
 }
