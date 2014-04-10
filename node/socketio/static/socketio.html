@@ -3,6 +3,8 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
   <title>SocketIO Test</title>
   <style>
   html, body {
@@ -13,7 +15,7 @@
   }
   .container {
     height: 100%;
-    margin: 0 10px;
+    margin: 0 0px;
   }
   .content {
     height: 80%;
@@ -23,15 +25,14 @@
     height: 30px;
   }
   .textinput {
-    height: 50px;
   }
   .textinput input {
-    width: 80%;
-    height: 100%;
+    width: 70%;
+    height: 50px;
   }
   .textinput button {
-    width: 15%;
-    height: 100%;
+    width: 25%;
+    height: 50px;
   }
   </style>
 </head>
@@ -90,8 +91,10 @@
     });
     socket.on('serverMsg', function(data) {
       console.log('Received from server ', data);
-      var msgDiv = '<div class="msg">' +
-        data.text + '</div>';
+      var addr = data.address;
+
+      var msgDiv = '<div class="msg"><span>' + addr.address + ':' + addr.port + '</span>-<span>' +
+        data.text + '</span></div>';
       content.append($(msgDiv));
     });
   });
