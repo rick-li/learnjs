@@ -5,6 +5,7 @@
   "devDependencies": {
     "http-proxy": "latest",
     "connect": "latest",
+    "connect-route": "latest",
     "proxy-middleware": "latest",
     "cookie": "latest",
     "underscore": "latest",

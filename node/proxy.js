@@ -1,4 +1,6 @@
 var _ = require('underscore');
+var fs = require('fs');
+var os = require('os');
 var urlUtil = require('url');
 var cookieUtil = require('cookie');
 var regexQuote = require('regexp-quote');
@@ -6,14 +8,33 @@ var regexQuote = require('regexp-quote');
 var urlPattern = require('url-pattern');
 
 var cookieStore = {};
-var proxyConfigs = [];
+var urlRules = [];
+var ua = '';
 var log = console.log;
 module.exports = function(options) {
   // console.log('options: ', options);
-  // parseProxyConfig(options);
-  proxyConfigs = options;
+  fs.readFile(os.tmpdir() + '/mobileProxyCookie', function(err, data) {
+    if (err) {
+      console.log('Not found cookie persistence.');
+      return;
+    }
+    cookieStore = JSON.parse(data);
+  });
+
+  if (options.ua) {
+    switch (options.ua) {
+      case 'android':
+        ua = 'Mozilla/5.0 (Linux; U; Android 4.0.2; en-us; Galaxy Nexus Build/ICL53F) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30';
+        break;
+      case 'ios':
+        ua = 'Mozilla/5.0 (iPhone; CPU iPhone OS 5_0 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9A334 Safari/7534.48.3';
+      default:
+        ua = ''
+    }
+  }
+  urlRules = options.urlRules;
   return function(req, resp, next) {
-    // match path by patterns one by one, check if method match
+
     console.log('making request');
 
     var matchedConfig = matchReqByConfig(req);
@@ -40,13 +61,18 @@ module.exports = function(options) {
         req.headers.Cookie += key + '=' + val + ';'
       }
     });
+    if (ua) {
+      urlOpts.headers["User-Agent"] = ua;
+    }
     delete urlOpts.headers["host"];
 
-    console.log(urlOpts);
-
+    // console.log(urlOpts);
 
     //TODO Organize with Q promise.
     var myReq = request(urlOpts, function(myRes) {
+
+      // var baseTagRe = /^<base.*href="(http:\/\/(www|uat|qa|dev).citivelocity.com)\/(\w+)".*>$/;
+      // console.log(myRes);
 
       var statusCode = myRes.statusCode,
         headers = myRes.headers,
@@ -61,6 +87,7 @@ module.exports = function(options) {
       }
       // console.log(myRes.headers);
       var cookies = myRes.headers['set-cookie'] || [];
+
       console.log('cookies: ', cookies);
       cookies.forEach(function(cookie) {
         var oCookie = cookieUtil.parse(cookie);
@@ -68,6 +95,11 @@ module.exports = function(options) {
         var val = oCookie[key];
         cookieStore[key] = val;
       });
+      if (myRes.headers['set-cookie']) {
+        fs.writeFile(os.tmpdir() + '/mobileProxyCookie', JSON.stringify(cookieStore));
+      }
+      // myRes.headers['Access-Control-Allow-Origin'] = '*';
+      // console.log('myRes.headers ', myRes.headers);
       // applyViaHeader(myRes.headers, opts, myRes.headers);
       resp.writeHead(myRes.statusCode, myRes.headers);
       myRes.on('error', function(err) {
@@ -86,11 +118,17 @@ module.exports = function(options) {
   }
 };
 
+/**
+ * Match path by patterns one by one, check if method match
+ * @param req
+ * @return matched config or false
+ */
+
 function matchReqByConfig(req) {
-  if (!proxyConfigs) {
+  if (!urlRules) {
     return;
   }
-  var matchedConfig = _.find(proxyConfigs, function(oConfig) {
+  var matchedConfig = _.find(urlRules, function(oConfig) {
     var pattern = oConfig.pattern;
     if (urlPattern.newPattern(pattern).match(req.url)) {
       if (!oConfig.method) { //match all methods
@@ -105,15 +143,4 @@ function matchReqByConfig(req) {
     return matchedConfig;
   }
   return false;
-}
-
-function ensureAllInBottom(configs) {
-  // var newConfigs = [];
-  // var allConfig;
-  // configs.forEach(function (config) {
-  //   if(config.pattern && config.pattern === '*'){
-
-  //   }
-  //   newConfigs.push(config);
-  // });
 }
