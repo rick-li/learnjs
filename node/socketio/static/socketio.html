@@ -62,7 +62,9 @@
         log: function() {}
       };
     }
-    $('.content').css({
+    var textInput = $('.textinput input');
+    var content = $('.content');
+    content.css({
       height: $('.content').height()
     });
     //==============Handles connection =======================
@@ -77,10 +79,15 @@
       console.log("Disconnected");
       $('.header span').text('DISCONNECTED');
     });
-    //==============Handles connection =======================
-    var textInput = $('.textinput input');
-    var content = $('.content');
+    //==============Initialize data ==============================
+    $.get('/historyMessages').done(function(msgs) {
+      $.each(msgs, function(i, el) {
+        content.append(createMsg(el));
+      });
+      scrollTop();
+    });
 
+    //==============Handles socket messages =======================
     $('.textinput button').on('click', function() {
       if (textInput.val()) {
         socket.emit('clientMsg', {
@@ -91,12 +98,22 @@
     });
     socket.on('serverMsg', function(data) {
       console.log('Received from server ', data);
+      content.append($(createMsg(data)));
+      scrollTop();
+    });
+
+    function createMsg(data) {
       var addr = data.address;
 
       var msgDiv = '<div class="msg"><span>' + addr.address + ':' + addr.port + '</span>-<span>' +
         data.text + '</span></div>';
-      content.append($(msgDiv));
-    });
+
+      return msgDiv;
+    }
+
+    function scrollTop() {
+      content.scrollTop(content.prop('scrollHeight'));
+    }
   });
   </script>
 </body>
