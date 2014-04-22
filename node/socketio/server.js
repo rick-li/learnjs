@@ -39,6 +39,13 @@ app.get('/historyMessages', function(req, res, next) {
 
 //================SocketIO===================
 var io = require('socket.io').listen(server);
+io.set('transports', [
+  'websocket',
+  'flashsocket',
+  'htmlfile',
+  'xhr-polling'
+  // , 'jsonp-polling'
+]);
 io.sockets.on('connection', function(socket) {
   var address = socket.handshake.address;
   console.log('New connection established from ', address);

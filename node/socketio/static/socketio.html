@@ -7,6 +7,9 @@
 
   <title>SocketIO Test</title>
   <style>
+  input, button {
+    -webkit-appearance:none;
+  }
   html, body {
     height: 100%;
   }
@@ -24,14 +27,25 @@
   .content .msg {
     height: 30px;
   }
-  .textinput {
-  }
-  .textinput input {
-    width: 70%;
+  .textwrap {
+    width: 100%;
+    position relative;
     height: 50px;
   }
-  .textinput button {
-    width: 25%;
+  .textinput {
+    position: absolute;
+    right:105px;
+    left: 0px;
+    height: 50px;
+  }
+  .textinput input {
+    height: 50px;
+    width: 100%;
+  }
+  button {
+    position: absolute;
+    right:0px;
+    width: 100px;
     height: 50px;
   }
   </style>
@@ -44,17 +58,18 @@
       <span>DISCONNECTED</span>
     </div>
     <div class="content"></div>
-    <div class="textinput">
-      <input type="text">
+    <div class="textwrap">
+      <div class="textinput">
+        <input type="text">
+      </div>
       <button>
         Send
       </button>
     </div>
-
   </div>
 
   <script src="jquery.min.js"></script>
-  <script src="socket.io-client/dist-out/socket.io.min.js"></script>
+  <script src="socket.io-client/dist-out/socket.io.js"></script>
   <script>
   $(document).ready(function() {
     if (typeof console === 'undefined') {
@@ -88,7 +103,7 @@
     });
 
     //==============Handles socket messages =======================
-    $('.textinput button').on('click', function() {
+    $('button').on('click', function() {
       if (textInput.val()) {
         socket.emit('clientMsg', {
           text: textInput.val()

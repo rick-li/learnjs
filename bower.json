@@ -1,18 +1,9 @@
 {
-    "name": "jslearn",
-    "private": true,
-    "dependencies": {
-        "bootstrap-sass": "git://github.com/twbs/bootstrap-sass.git#v3.1.0",
-        "modernizr": "~2.6.2",
-        "jquery": "~1.10.2",
-        "zepto": "latest",
-        "requirejs": "latest",
-        "requirejs-text": "latest",
-        "jquery-pjax": "latest",
-        "pie": "latest",
-        "ng-grid": "latest",
-        "datatables": "latest",
-        "snapjs": "latest"
-    },
-    "devDependencies": {}
+  "name": "jslearn",
+  "private": true,
+  "dependencies": {
+    "socket.io-client": "C:/Users/kl68884/Downloads/socket.io-client-0.9.16.zip",
+    "jquery": "C:/Users/kl68884/Downloads/jquery-1.11.0.zip"
+  },
+  "devDependencies": {}
 }
