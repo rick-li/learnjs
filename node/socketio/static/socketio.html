@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <title>SocketIO Test</title>
+  <style>
+  html, body {
+    height: 100%;
+  }
+  .header {
+    height: 30px;
+  }
+  .container {
+    height: 100%;
+    margin: 0 0px;
+  }
+  .content {
+    height: 80%;
+    overflow-y: auto;
+  }
+  .content .msg {
+    height: 30px;
+  }
+  .textinput {
+  }
+  .textinput input {
+    width: 70%;
+    height: 50px;
+  }
+  .textinput button {
+    width: 25%;
+    height: 50px;
+  }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      STATUS:
+      <span>DISCONNECTED</span>
+    </div>
+    <div class="content"></div>
+    <div class="textinput">
+      <input type="text">
+      <button>
+        Send
+      </button>
+    </div>
+
+  </div>
+
+  <script src="jquery.min.js"></script>
+  <script src="socket.io-client/dist-out/socket.io.min.js"></script>
+  <script>
+  $(document).ready(function() {
+    if (typeof console === 'undefined') {
+      window.console = {
+        log: function() {}
+      };
+    }
+    var textInput = $('.textinput input');
+    var content = $('.content');
+    content.css({
+      height: $('.content').height()
+    });
+    //==============Handles connection =======================
+    var socketUrl = window.location.protocol + '//' + window.location.host;
+    console.log('socketUrl:' + socketUrl);
+    var socket = io.connect(socketUrl);
+    socket.on('connect', function(status) {
+      console.log("Connected");
+      $('.header span').text('CONNECTED');
+    });
+    socket.on('disconnect', function() {
+      console.log("Disconnected");
+      $('.header span').text('DISCONNECTED');
+    });
+    //==============Initialize data ==============================
+    $.get('/historyMessages').done(function(msgs) {
+      $.each(msgs, function(i, el) {
+        content.append(createMsg(el));
+      });
+      scrollTop();
+    });
+
+    //==============Handles socket messages =======================
+    $('.textinput button').on('click', function() {
+      if (textInput.val()) {
+        socket.emit('clientMsg', {
+          text: textInput.val()
+        });
+        textInput.val('');
+      }
+    });
+    socket.on('serverMsg', function(data) {
+      console.log('Received from server ', data);
+      content.append($(createMsg(data)));
+      scrollTop();
+    });
+
+    function createMsg(data) {
+      var addr = data.address;
+
+      var msgDiv = '<div class="msg"><span>' + addr.address + ':' + addr.port + '</span>-<span>' +
+        data.text + '</span></div>';
+
+      return msgDiv;
+    }
+
+    function scrollTop() {
+      content.scrollTop(content.prop('scrollHeight'));
+    }
+  });
+  </script>
+</body>
+
+</html>
