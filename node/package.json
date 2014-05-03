@@ -10,7 +10,7 @@
         "underscore": "latest",
         "regexp-quote": "latest",
         "request": "latest",
-        "Q": "latest",
+        "q": "latest",
         "url-pattern": "latest",
         "mysql": "latest"
     }
