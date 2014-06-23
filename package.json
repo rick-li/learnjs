@@ -17,6 +17,7 @@
     "gulp-useref": "~0.1.2",
     "gulp-bundle": "~0.2.0",
     "wiredep": "~1.1.0",
+    "q": "1.0.1"
     "socket.io": "latest"
   },
   "engines": {
