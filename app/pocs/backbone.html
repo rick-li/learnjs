@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title></title>
+  <script type="text/javascript" src="../bower_components/underscore/underscore.js"></script>
+  <script type="text/javascript" src="../bower_components/backbone/backbone.js"></script>
+  <script type="text/javascript">
+    // var EventBus = function() {
+
+    // };
+    // EventBus.prototype.action1 = function() {
+    //   console.log('action1');
+    // };
+    // EventBus.prototype.action2 = function() {
+    //   console.log('action2');
+    // };
+
+    // _.extend(EventBus.prototype, Backbone.Events)
+
+    // var e = new EventBus();
+
+
+    // e.on({'click': });
+
+
+    // e.trigger('click');
+
+
+    var Events = {
+      on: function(name, callback, context) {
+        this._events || (this._events = {});
+        this._events[name] || (this._events[name] = []);
+        this._events[name].push({name: name, callback: callback, context: context});
+        return this;
+      },
+
+      once: function(name, callback, context) {
+        //replace the callback, before executing it, call off
+        var that = this;
+        var proxyCallback = function() {
+          that.off(name, callback);
+          callback.call(callback.context);
+        }
+        proxyCallback._callback = callback;
+        this.on(name, proxyCallback, context);
+      },
+
+      off: function(name, callback, context) {
+        var events, retain;
+        if(!name && !callback && !context){
+          this._events = void 0;
+          return this;
+        }
+        names = _.keys(this._events);
+        for(var i=0; i<names.length; i++){
+          var name = names[i];
+          if(events = this._events[name]){
+            this._events[name] = retain = [];
+            if(callback || context){
+              for(var j=0; j < events.length; j++){
+                var ev = events[j];
+                if((callback && callback != ev.callback && callback !== ev.callback._callback) || (context && context !== ev.context)){
+                  retain.push(ev);
+                }
+              }
+              if(!retain.length){
+                delete this._events[name];
+              }
+            }
+          }
+        }
+        return this;
+      },
+
+      trigger: function(name) {
+        if(!this._events[name]){
+          return this;
+        }
+        var args = [].slice.call(arguments, 1);
+        var events = this._events[name]
+        for(var i=0;i< events.length; i++){
+          var ev = events[i];
+          ev.callback && ev.callback.apply(ev.context, args);
+        }
+        return this;
+      }
+
+    };
+  </script>
+</head>
+<body>
+
+</body>
+</html>

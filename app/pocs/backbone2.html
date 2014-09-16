@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title></title>
+
+</head>
+<body>
+  <script type="text/javascript" src="../bower_components/jquery/dist/jquery.min.js"></script>
+  <script type="text/javascript" src="../bower_components/underscore/underscore.js"></script>
+  <script type="text/javascript" src="../bower_components/backbone/backbone.js"></script>
+  <script src="../bower_components/react/react.js"></script>
+  <script src="../bower_components/react/JSXTransformer.js"></script>
+
+  <script type="text/jsx">
+    /**
+     * @jsx React.DOM
+     */
+
+  </script>
+  <script type="text/javascript">
+  $(document).ready(function() {
+    var Todo = Backbone.Model.extend({
+      defaults: function() {
+        return {
+          title: 'empty todo...',
+          done: false
+        }
+      }
+    });
+
+    var TodoList = Backbone.Collection.extend({
+      model: Todo,
+
+      done: function() {
+        return this.where({done: true});
+      },
+
+      remaining: function() {
+        return this.where({done: false});
+      }
+    });
+
+    var Todos = new TodoList;
+
+
+    var TodoView = Backbone.View.extend({
+      tagName: 'li',
+
+      initialize: function() {
+        this.listenTo(this.model, 'change', this.render);
+        this.listenTo(this.model, 'change', this.render);
+      }
+    });
+  });
+
+
+  </script>
+
+    <script type="text/template" id="item-template">
+    <div class="view">
+      <input class="toggle" type="checkbox" <%= done ? 'checked="checked"' : '' %> />
+      <label><%- title %></label>
+      <a class="destroy"></a>
+    </div>
+    <input class="edit" type="text" value="<%- title %>" />
+  </script>
+
+  <script type="text/template" id="stats-template">
+    <% if (done) { %>
+      <a id="clear-completed">Clear <%= done %> completed <%= done == 1 ? 'item' : 'items' %></a>
+    <% } %>
+    <div class="todo-count"><b><%= remaining %></b> <%= remaining == 1 ? 'item' : 'items' %> left</div>
+  </script>
+</body>
