@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>REACTJS POC</title>
+  <style>
+  .example-enter {
+    opacity: 0.01;
+    transition: opacity .5s ease-in;
+  }
+  .example-enter.example-enter-active {
+    opacity: 1;
+  }
+  .example-leave {
+    opacity: 1;
+    transition: opacity .5s ease-in;
+  }
+  .example-leave.example-leave-active {
+    opacity: 0.01;
+  }
+  </style>
+</head>
+
+<body>
+  <span>Page Header</span>
+  <div id="container">
+    <div class="parent">
+      <div class="child">
+        Hello world
+      </div>
+      <div class="click-child">CLick me</div>
+    </div>
+
+  </div>
+
+  <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="../bower_components/hammer-touchemulator/touch-emulator.js"></script>
+  <script>
+  TouchEmulator();
+  </script>
+  <script src="../bower_components/hammerjs/hammer.js"></script>
+  <script src="../bower_components/jquery-hammerjs/jquery.hammer.js"></script>
+
+  <script>
+  $(function() {
+    $('.parent').hammer({
+      domEvents: true
+    }).on('tap', '.child', function() {
+      console.log('====>tap');
+    });
+
+    $('.click-child').hammer().on('click', function() {
+      console.log('====>click');
+    });
+  });
+  </script>
+</body>
+
+</html>

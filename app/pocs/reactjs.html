@@ -28,8 +28,12 @@
   <span>Page Header</span>
   <div id="container"></div>
 
+  <script src="../bower_components/jquery/dist/jquery.min.js"></script>
   <script src="../bower_components/react/react-with-addons.js"></script>
   <script src="../bower_components/react/JSXTransformer.js"></script>
+  <script src="../bower_components/hammerjs/hammer.js"></script>
+<script src="../bower_components/jquery-hammerjs/jquery.hammer.js"></script>
+
 
   <script type="text/jsx">
     /**
@@ -94,30 +98,6 @@
 
      var CSSTransitionGroup = React.addons.CSSTransitionGroup;
 
-     var AnimationView = React.createClass({
-      // getInitialState: function() {
-        // return {items: ['hello', 'world', 'click', 'me']}
-      // },
-       handleRemove: function(i) {
-        // var newItems = this.state.items;
-        // newItems.splice(i, 1);
-        // this.setState({items: newItems});
-      },
-      render: function() {
-        // var items = this.state.items.map(function(item, i) {
-        //   return (
-        //     <div key={item} onClick={this.handleRemove.bind(this, i)}> {item} </div>
-        //   );
-        // }.bind(this));
-        return 
-        <div>
-          <CSSTransitionGroup transitionName="example">
-            {items}
-          </CSSTransitionGroup>
-          </div>;
-      }
-     });
-
      var TestView = React.createClass({
       getInitialState: function() {
         return {items: ['hello', 'world', 'click', 'me']}
@@ -126,7 +106,22 @@
         var newItems = this.state.items;
         newItems.splice(i, 1);
         this.setState({items: newItems});
-      },     
+      },
+      handleTap: function(ev) {
+        console.log('tap', ev);
+      },
+      componentDidMount: function() {
+        var that = this;
+        console.log('===> component mount.');
+        this.hammer = $(this.getDOMNode()).hammer();
+        this.hammer.on({'tap .item': this.handleTap});
+      },
+      componentDidUpdate: function() {
+        console.log('component did update..');
+      },
+      componentWillUnmount: function() {
+        console.log('===> component will unmount.');
+      },
       handleAdd: function() {
         console.log(this.refs)
         var newItem = this.refs.myinput.getDOMNode().value;
@@ -134,11 +129,11 @@
         this.setState({items: this.state.items});
       },
        render: function() {
-        
+
         console.log('rendering.....')
         var items = this.state.items.map(function(item, i) {
           return (
-            <div key={item} onClick={this.handleRemove.bind(this, i)}> {item} </div>
+            <div key={item} className="item"> {item} </div>
           );
         }.bind(this));
         return <div>
@@ -149,11 +144,11 @@
           </CSSTransitionGroup>
           </div>;
       }
-      
+
      });
 
     window.HelloComp = React.renderComponent(
-      
+
       <TestView/>
         ,
         document.getElementById('container')

@@ -1,0 +1,134 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title></title>
+  <style type="text/css">
+    li{
+      list-style: none;
+    }
+    .item-wrap{
+      position: relative;
+      width: 200px;
+      height: 30px;
+      line-height: 30px;
+      border: solid 1px;
+      padding: 0 5px;
+    }
+    .item-title{
+      width: 100px;
+    }
+    .item-delete-btn{
+      position: absolute;
+      right: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="todoapp">
+    <div class="header">
+      <span>Search: </span><input class="search-box">
+    </div>
+    <ul class="todo-list">
+    </ul>
+    <div class="footer">
+      <div class="done-wrap"><span>DONE:</span><span class="done"></span></div>
+      <div class="remaining-wrap"><span>REMAINING:</span><span class="remaining"></span></div>
+    </div>
+  </div>
+
+
+  <script type="text/javascript" src="../../bower_components/jquery/dist/jquery.min.js"></script>
+  <script type="text/javascript" src="../../bower_components/underscore/underscore.js"></script>
+  <script type="text/javascript" src="../../bower_components/backbone/backbone.js"></script>
+  <script src="../../bower_components/react/react.js"></script>
+  <script src="../../bower_components/react/JSXTransformer.js"></script>
+
+  <script type="text/jsx">
+    /**
+     * @jsx React.DOM
+     */
+
+  </script>
+  <script type="text/javascript">
+  $(document).ready(function() {
+    console.log('hello world.');
+
+    window.ItemModel = Backbone.Model.extend({
+      url: '/item',
+      defaults: {
+        name: 'aaa'
+      }
+    });
+
+
+    window.ItemCollection = Backbone.Collection.extend({
+      url: '/items',
+      model: window.ItemModel,
+      done: function() {
+        return this.where({done: true});
+      },
+      remaining: function() {
+        return this.where({done: false});
+      }
+    });
+
+    window.ItemView = Backbone.View.extend({
+      // el: 'body',
+      tagName: 'li',
+      events: {
+        'click .item-delete-btn': 'deleteItem'
+      },
+      initialize: function() {
+        console.log('initializing view.', this.model);
+        this.listenTo(this.model, 'destroy', this.remove);
+
+      },
+      deleteItem: function(e) {
+        console.log('delete', this.model);
+
+        this.model.destroy();
+      },
+      template: _.template('<div class="item-wrap"><label class="item-title"><%=name%></label><a class="item-delete-btn">X</a></div>'),
+
+
+
+      render: function() {
+        this.$el.append(this.template(this.model.toJSON()));
+
+        return this;
+      }
+    });
+
+    var items = new window.ItemCollection();
+    window.AppView = Backbone.View.extend({
+      el: $('.todoapp'),
+      initialize: function() {
+        this.listenTo(items, 'reset', this.addAll);
+        this.listenTo(items, 'add', this.addOne);
+        this.listenTo(items, 'all', this.render);
+        items.fetch();
+      },
+      addAll: function(e) {
+        console.log('addAll', e);
+      },
+      addOne: function(item) {
+        console.log('addOne', item);
+        var iv = new ItemView({model: item});
+        this.$('.todo-list').append(iv.render().el);
+      },
+      render: function() {
+        var done = items.done().length;
+        var remaining = items.remaining().length;
+        this.$('.done').text(done);
+        this.$('.remaining').text(remaining);
+        return this;
+      }
+
+    });
+
+    var app = new AppView();
+
+  });
+  </script>
+  </body>
+  </html>

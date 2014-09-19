@@ -2,20 +2,18 @@
   "name": "jslearn",
   "private": true,
   "dependencies": {
-    "bootstrap-sass": "https://github.com/twbs/bootstrap-sass.git#v3.1.0",
-    "modernizr": "~2.6.2",
-    "jquery": "~1.10.2",
+    "bootstrap-sass": "3.0.2",
+    "modernizr": "latest",
+    "jquery": "1.10.2",
     "zepto": "https://github.com/madrobby/zepto.git#latest",
     "requirejs": "latest",
     "requirejs-text": "latest",
     "jquery-pjax": "latest",
     "pie": "latest",
-    "ng-grid": "latest",
-    "datatables": "latest",
     "snapjs": "latest",
     "socket.io-client": "latest",
-    "react": "~0.11.1",
-    "kendo-ui-core": "~2014.2.716"
+    "jquery-hammerjs": "2.0.0",
+    "hammer-touchemulator": "0.0.2"
   },
   "devDependencies": {}
 }
