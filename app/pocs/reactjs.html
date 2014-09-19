@@ -5,6 +5,22 @@
   <meta charset="UTF-8">
   <title>REACTJS POC</title>
   <style>
+  .example-enter {
+  opacity: 0.01;
+  transition: opacity .5s ease-in;
+}
+
+.example-enter.example-enter-active {
+  opacity: 1;
+}
+.example-leave {
+  opacity: 1;
+  transition: opacity .5s ease-in;
+}
+
+.example-leave.example-leave-active {
+  opacity: 0.01;
+}
   </style>
 </head>
 
@@ -12,18 +28,22 @@
   <span>Page Header</span>
   <div id="container"></div>
 
-  <script src="../bower_components/react/react.js"></script>
+  <script src="../bower_components/react/react-with-addons.js"></script>
   <script src="../bower_components/react/JSXTransformer.js"></script>
 
   <script type="text/jsx">
     /**
      * @jsx React.DOM
      */
+
+
+
     var Hello = React.createClass({
       changeState: function() {
         var newClickNum = this.state.clickNum + 1;
         this.setState({clickNum: newClickNum});
-        this.refs.subComp.getDOMNode().focus();
+        console.log(this.props.children)
+        // this.children..getDOMNode().focus();
       },
       changeProp: function() {
         var age = this.props.age + 1;
@@ -41,25 +61,101 @@
       render: function() {
         var that = this;
         return <div>
+        {this.props.children}
         <button onClick={this.childCount}>child count</button>
         <button onClick={this.changeProp}>change prop</button>
-        <button onClick={this.increaseNum}>change state</button><div >Hello world {this.state.name} {this.state.clickNum} {this.props.age}</div></div>
+        <button onClick={this.changeState}>change state</button><div >Hello world {this.state.name} {this.state.clickNum} {this.props.age}</div></div>
       }
     });
-
+    var Parent = React.createClass({
+      render: function() {
+        return <div>
+          {this.props.children}
+        </div>;
+      }
+    });
     var SubComp = React.createClass({
       render: function() {
         return <div>child</div>
       }
-    })
+    });
+
+    var AppView = React.createClass({
+      render: function() {
+        return <div>
+        <Hello age={12}>
+              <div>sdfafdasf</div>
+         <input type="text" value="asdfad"/>
+        <SubComp/>
+        </Hello>
+        </div> ;
+      }
+    });
+
+     var CSSTransitionGroup = React.addons.CSSTransitionGroup;
+
+     var AnimationView = React.createClass({
+      // getInitialState: function() {
+        // return {items: ['hello', 'world', 'click', 'me']}
+      // },
+       handleRemove: function(i) {
+        // var newItems = this.state.items;
+        // newItems.splice(i, 1);
+        // this.setState({items: newItems});
+      },
+      render: function() {
+        // var items = this.state.items.map(function(item, i) {
+        //   return (
+        //     <div key={item} onClick={this.handleRemove.bind(this, i)}> {item} </div>
+        //   );
+        // }.bind(this));
+        return 
+        <div>
+          <CSSTransitionGroup transitionName="example">
+            {items}
+          </CSSTransitionGroup>
+          </div>;
+      }
+     });
+
+     var TestView = React.createClass({
+      getInitialState: function() {
+        return {items: ['hello', 'world', 'click', 'me']}
+      },
+      handleRemove: function(i) {
+        var newItems = this.state.items;
+        newItems.splice(i, 1);
+        this.setState({items: newItems});
+      },     
+      handleAdd: function() {
+        console.log(this.refs)
+        var newItem = this.refs.myinput.getDOMNode().value;
+        this.state.items.push(newItem);
+        this.setState({items: this.state.items});
+      },
+       render: function() {
+        
+        console.log('rendering.....')
+        var items = this.state.items.map(function(item, i) {
+          return (
+            <div key={item} onClick={this.handleRemove.bind(this, i)}> {item} </div>
+          );
+        }.bind(this));
+        return <div>
+          <input ref="myinput"/>
+          <button onClick={this.handleAdd}>add</button>
+          <CSSTransitionGroup transitionName="example">
+            {items}
+          </CSSTransitionGroup>
+          </div>;
+      }
+      
+     });
 
     window.HelloComp = React.renderComponent(
-        <Hello age={12}>
-        <div>sdfafdasf</div>
-         <input type="text" value="asdfad"/>
-        <SubComp ref="subComp"/>
-
-        </Hello>,
+      
+      <TestView/>
+        ,
         document.getElementById('container')
     );
 

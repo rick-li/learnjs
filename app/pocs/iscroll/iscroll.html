@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+
+<title>iScroll demo: barebone</title>
+
+<style>
+  body, ul, li{
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+  }
+  .header{
+    position: absolute;
+    width: 100%;
+    height: 50px;
+  }
+  .wrapper{
+    position: absolute;
+    width: 100%;
+    
+    top: 50px;
+    bottom: 0px;
+  }
+
+  .scroller{
+    position: absolute;
+  }
+
+</style>
+<script type="text/javascript" src="iscroll.js"></script>
+
+<script type="text/javascript">
+var init = function(){
+  console.log('init')
+  // var wrapper = document.querySelector('.wrapper');
+  window.scroller = new IScroll('.wrapper',{
+    scrollbars: true
+})
+
+}
+</script>
+</head>
+
+<body onload="init()">
+  <div class="header">header</div>
+  <div class="wrapper">
+    <div class="scroller">
+      <ul>
+        <li>11111111111111111111</li>
+        <li>11111111111111111111</li>
+        <li>11111111111111111111</li>
+        <li>11111111111111111111</li>
+        <li>11111111111111111111</li>
+<li>11111111111111111111</li>
+        <li>11111111111111111111</li>
+        <li>11111111111111111111</li>
+        <li>11111111111111111111</li>
+        <li>11111111111111111111</li>
+        <li>11111111111111111111</li>
+        <li>11111111111111111111</li>
+        <li>11111111111111111111</li>
+        <li>11111111111111111111</li>
+        <li>11111111111111111111</li>
+        <li>11111111111111111111</li>
+        <li>11111111111111111111</li>
+        <li>11111111111111111111</li>
+        <li>11111111111111111111</li>
+        <li>11111111111111111111</li>
+        <li>11111111111111111111</li>
+        <li>11111111111111111111</li>
+        <li>11111111111111111111</li>
+        <li>11111111111111111111</li>
+        <li>11111111111111111111</li>
+<li>11111111111111111111</li>
+        <li>11111111111111111111</li>
+        <li>11111111111111111111</li>
+        <li>11111111111111111111</li>
+        <li>11111111111111111111</li>
+        <li>22222222222222222222</li>
+        <li>22222222222222222222</li>
+        <li>22222222222222222222</li>
+        <li>22222222222222222222</li>
+      </ul>
+
+    </div>
+
+  </div>
+</body>
+</html>

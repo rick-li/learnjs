@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Mobile Page structure</title>
+    <style>
+        .left-nav{
+            position: absolute;
+            width: 100px;
+            height: 400px;
+            background: green;
+        }
+        .page{
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background: blue;
+            border: solid 1px;
+        }
+
+        .header{
+            width: 100%;
+            height: 50px;
+
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="left-nav"></div>
+        <div class="page-wrapper">
+            <div class="page current"></div>    
+        </div>
+        
+    </div>
+    <script src="../../bower_components/jquery/jquery.min.js"></script>
+</body>
+
+</html>
