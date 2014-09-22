@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+  <title>HAMMERJS POC</title>
+  <style>
+  html,
+  body {
+    min-height: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    position: relative;
+  }
+  .box {
+    width: 500px;
+    height: 100px;
+    margin: 100px;
+    border: solid 1px;
+  }
+  .log {
+    width: 500px;
+    height: 200px;
+    margin: 100px;
+    border: solid 1px;
+  }
+  .animate {
+    -webkit-transition: all .3s;
+  }
+  </style>
+</head>
+
+<body>
+  <span>Page Header</span>
+  <div id="container">
+    <div class="box">
+      a Box
+    </div>
+    <div class="logger">
+    </div>
+  </div>
+  <script src="../../bower_components/hammer-touchemulator/touch-emulator.js"></script>
+  <script>
+  TouchEmulator();
+  </script>
+  <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="../../bower_components/hammerjs/hammer.js"></script>
+  <script src="../../bower_components/jquery-hammerjs/jquery.hammer.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    var startPos;
+    var transform = {};
+    var box = $('.box').hammer({
+      dragBlockHorizontal: true,
+      recognizers: [
+        [Hammer.Pan, {
+          direction: Hammer.DIRECTION_HORIZONTAL
+        }],
+        [Hammer.Pinch, { enable: true }]
+      ]
+    }).on('panstart panmove panend', function(e) {
+
+      var x, y;
+      if (e.type === 'panstart') {
+        box.removeClass('animate');
+        startPos = box.position();
+      } else if (e.type === 'panmove') {
+        x = startPos.left + e.gesture.deltaX;
+        y = 0;
+      } else if (e.type === 'panend') {
+        box.addClass('animate');
+        var treshold = startPos.left + box.width() / 2;
+        x = startPos.left + e.gesture.deltaX;
+        if (x > treshold) {
+          next();
+        } else {
+          reset();
+        }
+        return;
+      }
+
+      console.log('x: ', x, ' y: ', y);
+      box.css({
+        webkitTransform: 'translate3d(' + x + 'px, ' + y + 'px,0)'
+      });
+
+    }).on('pinchstart pinchmove pinchend', function(e) {
+      console.log(e.type, 'center: ', e.gesture.center, ' scale ', e.gesture.scale);
+
+    });
+    var hammer = box.data('hammer');
+
+    hammer.get('pan').set({
+      direction: Hammer.DIRECTION_HORIZONTAL
+    });
+
+    var reset = function() { //reset to start position
+      console.log('reset');
+      var x = startPos.left;
+      var y = 0
+      box.css({
+        webkitTransform: 'translate3d(' + x + 'px, ' + y + 'px,0)'
+      });
+    }
+
+    var next = function() {
+      console.log('next');
+      var x = startPos.left + box.width();
+      var y = 0
+      box.css({
+        webkitTransform: 'translate3d(' + x + 'px, ' + y + 'px,0)'
+      });
+    }
+  });
+
+
+  function log(msg) {
+    $('.logger').append($('<p>' + msg + '</p>'));
+  }
+  </script>
+</body>

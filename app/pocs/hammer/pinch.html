@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+  <title>HAMMERJS POC</title>
+  <style>
+  html,
+  body {
+    min-height: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    position: relative;
+  }
+  .box-wrap{
+    position: relative;
+    left: 100px;
+    top: 100px;
+    background: #aaa;
+    height: 200px;
+    width: 200px;
+    border: solid 1px;
+  }
+  .box {
+    width: 150px;
+    height: 150px;
+
+    border: solid 1px;
+    position: absolute;
+  }
+  .log {
+    width: 500px;
+    height: 200px;
+    margin: 100px;
+    border: solid 1px;
+  }
+  .animate {
+    -webkit-transition: all .3s;
+  }
+  </style>
+</head>
+
+<body>
+  <span>Page Header</span>
+  <div id="container">
+    <div class="box-wrap">
+      <div class="box">
+        a Box
+      </div>
+    </div>
+  </div>
+  <script src="../../bower_components/hammer-touchemulator/touch-emulator.js"></script>
+  <script>
+  TouchEmulator();
+  </script>
+  <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="../../bower_components/hammerjs/hammer.js"></script>
+  <script src="../../bower_components/jquery-hammerjs/jquery.hammer.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    var size, startPos, lastCenter = {x:0,y:0}, xImage=0, yImage=0, panstartPos;
+    var pinched = false;
+    var box = $('.box').hammer({
+      dragBlockHorizontal: true,
+      recognizers: [
+        [Hammer.Pan, {
+          direction: Hammer.DIRECTION_HORIZONTAL
+        }],
+        [Hammer.Pinch, { enable: true }],
+        [Hammer.Tap, { enable: true, taps: 2}]
+      ]
+    }).on('panstart panmove panend',function(e) {
+      console.log(e.gesture.deltaX, ' ', e.gesture.deltaY);
+      if(e.type === 'panstart'){
+        panstartPos = box.position();
+      }else if(e.type === 'panmove'){
+        var dx = e.gesture.deltaX;
+        var dy = e.gesture.deltaY;
+        var x = panstartPos.left + dx;
+        var y = panstartPos.top + dy;
+
+        box.css('webkitTransform', 'translate3d('+x+'px, '+y+'px, 0)');
+      }
+    }).on('tap', function(e) {
+      console.log(e);
+      box.css('webkitTransform', '').css('webkitTransformOrigin', '');
+    }).on('pinchstart pinchmove pinchend', function(e) {
+
+      console.log(e.type, 'center: ', e.gesture.center, ' scale ', e.gesture.scale);
+      if(e.type === 'pinchstart'){
+        var w = box.width(), h = box.height();
+        startPos = box.offset();
+        size = {w: w, h: h};
+        startCenter = e.gesture.center;
+      }else if(e.type === 'pinchmove'){
+        var scale = e.gesture.scale;
+        var center = e.gesture.center;
+        scale < 1 && (scale = 1);
+
+
+        xImage = xImage + (center.x - lastCenter.x)/scale;
+        yImage = yImage + (center.y - lastCenter.y)/scale;
+
+        var xNew = (center.x - xImage) / scale;
+        var yNew = (center.y - yImage) / scale;
+        console.log('x,y',xNew,',',yNew);
+
+        box.css({webkitTransform: 'scale('+scale+','+scale+') translate3d('+xNew+'px,'+yNew+'px,0)'})
+        .css({webkitTransformOrigin: xImage+' '+yImage})
+        lastCenter = center;
+      }
+    });
+
+
+
+  });
+
+
+
+  </script>
+</body>
