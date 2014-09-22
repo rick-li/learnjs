@@ -60,7 +60,54 @@
   <script src="../../bower_components/jquery-hammerjs/jquery.hammer.js"></script>
   <script type="text/javascript">
   $(function() {
-    var size, startPos, lastCenter = {x:0,y:0}, xImage=0, yImage=0, panstartPos;
+
+    var handlePinch = function() {
+      var initialTranslate, initialScale = 0,lastCenter = {x:0,y:0}, xImage=0, yImage=0;
+      return function(e){
+        console.log(e.type, 'center: ', e.gesture.center, ' scale ', e.gesture.scale);
+        if(e.type === 'pinchstart'){
+          var w = box.width(), h = box.height();
+          startPos = box.offset();
+          
+          var transform = box.data('transform') || {};
+          initialTranslate = transform.translate3d || {x:0, y:0};
+          initialScale = transform.scale || 1;
+
+        }else if(e.type === 'pinchmove'){
+          var scale = e.gesture.scale * initialScale;
+          var center = e.gesture.center;
+          scale < 1 && (scale = 1);
+
+          xImage = xImage + (center.x - lastCenter.x)/scale;
+          yImage = yImage + (center.y - lastCenter.y)/scale;
+
+          var xNew = initialTranslate.x + (center.x - xImage) / scale;
+          var yNew = initialTranslate.y + (center.y - yImage) / scale;
+          console.log('x,y',xNew,',',yNew);
+          
+          updateTransform(box, {x:xNew, y:yNew}, scale, {x:xImage, y: yImage});
+          lastCenter = center;
+        }
+      }
+    }
+
+    var handlePan = function() {
+      var initTranslate;
+      return function(e) {
+        console.log(e.gesture.deltaX, e.gesture.deltaY);
+        if(e.type === 'panstart'){
+          var transform = box.data('transform') || {};
+          initTranslate = transform.translate3d || {x:0,y:0};
+        }else if(e.type === 'panmove'){
+          var dx = e.gesture.deltaX;
+          var dy = e.gesture.deltaY;
+          var x = initTranslate.x + dx;
+          var y = initTranslate.y + dy;
+          updateTransform(box, {x:x, y:y});
+        }
+      }
+    }
+    
     var pinched = false;
     var box = $('.box').hammer({
       dragBlockHorizontal: true,
@@ -71,53 +118,44 @@
         [Hammer.Pinch, { enable: true }],
         [Hammer.Tap, { enable: true, taps: 2}]
       ]
-    }).on('panstart panmove panend',function(e) {
-      console.log(e.gesture.deltaX, ' ', e.gesture.deltaY);
-      if(e.type === 'panstart'){
-        panstartPos = box.position();
-      }else if(e.type === 'panmove'){
-        var dx = e.gesture.deltaX;
-        var dy = e.gesture.deltaY;
-        var x = panstartPos.left + dx;
-        var y = panstartPos.top + dy;
-
-        box.css('webkitTransform', 'translate3d('+x+'px, '+y+'px, 0)');
-      }
-    }).on('tap', function(e) {
+    }).on('panstart panmove panend',handlePan()).on('tap', function(e) {
       console.log(e);
       box.css('webkitTransform', '').css('webkitTransformOrigin', '');
-    }).on('pinchstart pinchmove pinchend', function(e) {
+    }).on('pinchstart pinchmove pinchend', handlePinch());
 
-      console.log(e.type, 'center: ', e.gesture.center, ' scale ', e.gesture.scale);
-      if(e.type === 'pinchstart'){
-        var w = box.width(), h = box.height();
-        startPos = box.offset();
-        size = {w: w, h: h};
-        startCenter = e.gesture.center;
-      }else if(e.type === 'pinchmove'){
-        var scale = e.gesture.scale;
-        var center = e.gesture.center;
-        scale < 1 && (scale = 1);
-
-
-        xImage = xImage + (center.x - lastCenter.x)/scale;
-        yImage = yImage + (center.y - lastCenter.y)/scale;
-
-        var xNew = (center.x - xImage) / scale;
-        var yNew = (center.y - yImage) / scale;
-        console.log('x,y',xNew,',',yNew);
-
-        box.css({webkitTransform: 'scale('+scale+','+scale+') translate3d('+xNew+'px,'+yNew+'px,0)'})
-        .css({webkitTransformOrigin: xImage+' '+yImage})
-        lastCenter = center;
+    var updateTransform = function($el, translate3d, scale, origin) {
+      var transform = $el.data('transform') || {};
+      if(translate3d){
+        transform.translate3d = translate3d;
       }
-    });
+      
+      if(scale){
+        transform.scale = scale;
+      }
 
+      if(origin){
+       transform.origin = origin;
+      }
+      $el.data('transform', transform);
+      var webkitTransform = '';
+      if(transform.translate3d){
+        webkitTransform += 'translate3d( '+transform.translate3d.x+'px,'+transform.translate3d.y+'px, 0)';
+      }
 
+      if(transform.scale){
+        webkitTransform += ' scale('+transform.scale+','+transform.scale+')';
+      }
+      console.log('transform ', webkitTransform);
+      $el.css({
+        webkitTransform: webkitTransform 
+      });
 
+      if(transform.origin){
+        $el.css({webkitTransformOrigin: transform.origin.x+' '+transform.origin.y });
+      }
+      
+    };
   });
-
-
 
   </script>
 </body>
