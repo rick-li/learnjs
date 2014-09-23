@@ -22,12 +22,13 @@
     height: 200px;
     width: 200px;
     border: solid 1px;
+
   }
   .box {
-    width: 150px;
-    height: 150px;
-    border: solid 1px;
     position: absolute;
+    width: 200px;
+    height: 200px;
+    border: solid 1px;
   }
   .log {
     width: 500px;
@@ -47,6 +48,9 @@
     <div class="box-wrap">
       <div class="box">
         a Box
+      </div>
+      <div class="box" style="left: 200px;">
+        b Box
       </div>
     </div>
   </div>
@@ -85,7 +89,7 @@
         } else if (e.type === 'pinchmove') {
           var scale = e.gesture.scale * initialScale;
           var center = e.gesture.center;
-          scale < 1 && (scale = 1);
+          scale < 1 && (scale = 1); //min scale = 1;
 
           xImage = xImage + (center.x - lastCenter.x) / scale;
           yImage = yImage + (center.y - lastCenter.y) / scale;
@@ -107,8 +111,44 @@
     };
 
     var handleCarousel = function($el) {
-      return function(e) {
+      var prev = function() {
 
+      };
+
+      var next = function() {
+
+      };
+      return function(e) {
+        if (e.type === 'panstart') {
+          $el.on('transitionend', function() {
+            $el.removeClass('animate');
+          });
+        } else if (e.type === 'panmove') {
+          //only supportx horizontal
+          var dx = e.gesture.deltaX;
+          console.log('handleCarousel', dx);
+          var thresold = $el.width() * 2 / 3;
+          if (Math.abs(dx) < thresold) {
+            //just translate the position
+            console.log('dx: ', dx);
+            updateTransform($el, {
+              x: dx,
+              y: 0
+            });
+          } else {
+            //decide to page or reset, now just reset
+            $el.addClass('animate');
+            updateTransform($el, {
+              x: thresold,
+              y: 0
+            });
+          }
+        } else if (e.type === 'panend') {
+          updateTransform($el, {
+            x: 0,
+            y: 0
+          });
+        }
       }
     };
 
@@ -175,12 +215,16 @@
     };
 
     var handlePan = function($el, $parent) {
-      var transform = $el.data('transform');
-      if (transform && transform.scale) {
-        return handleCarousel($el);
-      } else {
-        return handleZoomPan($el, $parent);
-      }
+      var handleZoomPanFn = handleZoomPan($el, $parent);
+      var handleCarouselFn = handleCarousel($el);
+      return function(e) {
+        var transform = $el.data('transform');
+        if (transform && transform.scale) {
+          handleZoomPanFn(e);
+        } else {
+          handleCarouselFn(e);
+        }
+      };
     };
 
 
