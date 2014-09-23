@@ -49,9 +49,7 @@
       <div class="box">
         a Box
       </div>
-      <div class="box" style="left: 200px;">
-        b Box
-      </div>
+
     </div>
   </div>
   <script src="../../bower_components/hammer-touchemulator/touch-emulator.js"></script>
@@ -139,7 +137,8 @@
             //decide to page or reset, now just reset
             $el.addClass('animate');
             updateTransform($el, {
-              x: thresold,
+
+              x: dx>0 ? thresold: -thresold,
               y: 0
             });
           }
@@ -246,7 +245,9 @@
       ]
     }).on('panstart panmove panend', handlePan(box, constraintParent)).on('tap', function(e) {
       console.log(e);
-      box.css('webkitTransform', '').css('webkitTransformOrigin', '');
+
+      box.css('webkitTransform', '').css('webkitTransformOrigin', '').data('transform', '');
+
     }).on('pinchstart pinchmove pinchend', handlePinch());
 
     var updateTransform = function($el, translate3d, scale, origin) {
