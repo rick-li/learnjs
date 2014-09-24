@@ -14,18 +14,21 @@
     margin: 0;
     position: relative;
   }
-  .box-wrap {
+  .box-container{
+    overflow: hidden;
     position: relative;
-    left: 100px;
-    top: 100px;
-    background: #aaa;
-    height: 200px;
-    width: 200px;
-    border: solid 1px;
+    left: 50px;
+    top: 50px;
+    height: 202px;
+    width: 202px;
 
   }
+  .box-wrap {
+    /*background: #aaa;*/
+    width: 800px;
+  }
   .box {
-    position: absolute;
+    float:left;
     width: 200px;
     height: 200px;
     border: solid 1px;
@@ -45,11 +48,18 @@
 <body>
   <span>Page Header</span>
   <div id="container">
-    <div class="box-wrap">
-      <div class="box">
-        a Box
+    <div class="box-container">
+      <div class="box-wrap">
+        <div class="box">
+          Box1
+        </div>
+        <div class="box">
+          Box2
+        </div>
+        <div class="box">
+          Box3
+        </div>
       </div>
-
     </div>
   </div>
   <script src="../../bower_components/hammer-touchemulator/touch-emulator.js"></script>
@@ -108,45 +118,58 @@
       }
     };
 
-    var handleCarousel = function($el) {
+    var handleCarousel = function($wrap) {
+      var currIdx, w, initTranslate, direction;
+      currIdx = 1;
+      w = $('.box:first', $wrap).outerWidth();
       var prev = function() {
+        currIdx--;
+        var currEl = $wrap.find('.box:nth-child('+currIdx+')');
 
+        if(currEl.length){
+          $wrap.addClass('animate');
+          updateTransform($wrap, {x:-(currIdx-1) * w, y:0});
+        }else{
+          next();
+        }
       };
 
       var next = function() {
+        currIdx++;
+        var currEl = $wrap.find('.box:nth-child('+currIdx+')');
 
+        if(currEl.length){
+          $wrap.addClass('animate');
+          updateTransform($wrap, {x:-(currIdx-1) * w, y:0});
+        }else{
+          prev();
+        }
       };
+      $wrap.on('transitionend', function() {
+        $wrap.removeClass('animate');
+      });
       return function(e) {
         if (e.type === 'panstart') {
-          $el.on('transitionend', function() {
-            $el.removeClass('animate');
-          });
+          var transform = $wrap.data('transform');
+          initTranslate = transform && transform.translate3d;
+          initTranslate || (initTranslate = {x:0, y:0});
         } else if (e.type === 'panmove') {
           //only supportx horizontal
+          direction = e.gesture.deltaX < 0 ? true: false; //true next, false prev
           var dx = e.gesture.deltaX;
-          console.log('handleCarousel', dx);
-          var thresold = $el.width() * 2 / 3;
+          var totalx = initTranslate.x + dx;
+          console.log('handleCarousel', totalx);
+          var thresold = w / 2;
           if (Math.abs(dx) < thresold) {
             //just translate the position
             console.log('dx: ', dx);
-            updateTransform($el, {
-              x: dx,
+            updateTransform($wrap, {
+              x: totalx,
               y: 0
             });
-          } else {
-            //decide to page or reset, now just reset
-            $el.addClass('animate');
-            updateTransform($el, {
-
-              x: dx>0 ? thresold: -thresold,
-              y: 0
-            });
-          }
+          } //otherwise do nothing...
         } else if (e.type === 'panend') {
-          updateTransform($el, {
-            x: 0,
-            y: 0
-          });
+          direction? next() : prev();
         }
       }
     };
@@ -227,9 +250,9 @@
     };
 
 
-    var constraintParent = $('.box-wrap');
-    var box = $('.box');
-    box.hammer({
+    var constraintParent = $('.box-container');
+    var boxwrap = $('.box-wrap');
+    boxwrap.hammer({
       dragBlockHorizontal: true,
       recognizers: [
         [Hammer.Pan, {
@@ -243,14 +266,16 @@
           taps: 2
         }]
       ]
-    }).on('panstart panmove panend', handlePan(box, constraintParent)).on('tap', function(e) {
-      console.log(e);
+    }).on('panstart panmove panend', handlePan(boxwrap, constraintParent)).on('tap', function(e) {
 
       box.css('webkitTransform', '').css('webkitTransformOrigin', '').data('transform', '');
 
-    }).on('pinchstart pinchmove pinchend', handlePinch());
+    })
+    //.on('pinchstart pinchmove pinchend', handlePinch());
 
+    var locked = false;
     var updateTransform = function($el, translate3d, scale, origin) {
+      locked = true;
       var transform = $el.data('transform') || {};
       if (translate3d) {
         transform.translate3d = translate3d;
@@ -285,6 +310,7 @@
             webkitTransformOrigin: transform.origin.x + ' ' + transform.origin.y
           });
         }
+        locked = false;
       });
 
 
