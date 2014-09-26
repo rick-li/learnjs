@@ -1,7 +1,5 @@
 {
     "directory": "app/bower_components",
-    "proxy": "http://webproxy.ssmb.com:8080",
-    "https-proxy": "http://webproxy.ssmb.com:8080",
     "registry":"http://registry.bower.io/",
     "strict-ssl": false
 }

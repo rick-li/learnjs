@@ -1,0 +1,13 @@
+.all-container{
+  width: 100%;
+}
+
+.layout-col{
+  border: solid 1px;
+  width: 500px;
+  float: left;
+}
+
+.fc-room.selected{
+  background: #bbb;
+}
