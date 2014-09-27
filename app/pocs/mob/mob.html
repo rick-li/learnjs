@@ -2,41 +2,73 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Mobile Page structure</title>
-    <style>
-        .left-nav{
-            position: absolute;
-            width: 100px;
-            height: 400px;
-            background: green;
-        }
-        .page{
-            position: relative;
-            width: 100%;
-            height: 400px;
-            background: blue;
-            border: solid 1px;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
 
-        .header{
-            width: 100%;
-            height: 50px;
-
-        }
-
-    </style>
+  <title>Mobile Page structure</title>
+  <link rel="stylesheet" href="animation.css">
+  <link rel="stylesheet" href="mob.css">
+  <style>
+  </style>
 </head>
 
 <body>
-    <div class="wrapper">
-        <div class="left-nav"></div>
-        <div class="page-wrapper">
-            <div class="page current"></div>    
-        </div>
-        
+  <div class="wrapper">
+    <div class="top-nav">
+      <div data-target="page1">page1</div>
+      <div data-target="page2">page2</div>
+      <div data-target="page3">page3</div>
     </div>
-    <script src="../../bower_components/jquery/jquery.min.js"></script>
+    <div class="left-nav"></div>
+    <div class="page-wrapper">
+      <div class="page page1 current" data-name="page1">
+        page1
+      </div>
+      <div class="page page2" data-name="page2">
+        page2
+      </div>
+      <div class="page page3" data-name="page3">
+        page3
+      </div>
+    </div>
+
+  </div>
+  <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+  <script>
+  $(function() {
+    var currPageName = $('.current').data('name');
+
+    $('[data-target=' + currPageName + ']').addClass('selected');
+    $('[data-target!=' + currPageName + ']').removeClass('selected');
+    $('.top-nav div').click(function() {
+      $('.top-nav div').removeClass('selected');
+      $(this).addClass('selected');
+      var targetPageClass = $(this).data('target');
+      var $currPage = $('.page.current');
+      var $targetPage = $('.page-wrapper').find('.' + targetPageClass);
+      var currIdx = $('.page-wrapper .page').index($currPage);
+      var targetIdx = $('.page-wrapper .page').index($targetPage);
+      console.log('target index: ', targetIdx, ' current idx: ', currIdx);
+      if (targetIdx > currIdx) {
+        //current to left, target from left.
+        $currPage.addClass('out moveToLeft').on('webkitAnimationEnd', function() {
+          $(this).removeClass('in out moveToLeft current');
+        });
+        $targetPage.addClass('in moveFromRight').on('webkitAnimationEnd', function() {
+          $(this).removeClass('in moveFromRight').addClass('current');
+        });
+      } else {
+        //current to right, target to right.
+        $currPage.addClass('out moveToRight').on('webkitAnimationEnd', function() {
+          $(this).removeClass('in out moveToRight current');
+        });
+        $targetPage.addClass('in moveFromLeft').on('webkitAnimationEnd', function() {
+          $(this).removeClass('in moveFromLeft').addClass('current');
+        });
+      }
+    });
+  });
+  </script>
 </body>
 
 </html>

@@ -1,0 +1,43 @@
+.in{
+  display: block;
+}
+.out{
+  display: block;
+}
+.page:not(.in):not(.current):not(.out){
+  display: none;
+}
+
+.moveToLeft{
+  -webkit-animation: moveToLeft .6s ease both;
+}
+.moveFromRight{
+  -webkit-animation: moveFromRight .6s ease both;
+}
+
+.moveToRight{
+  -webkit-animation: moveToRight .6s ease both; 
+}
+
+.moveFromLeft{
+  -webkit-animation: moveFromLeft .6s ease both; 
+}
+@-webkit-keyframes moveToLeft {
+  from {}
+  to { -webkit-transform: translateX(-100%);}
+}
+
+@-webkit-keyframes moveFromRight {
+  from { -webkit-transform: translateX(100%);}
+  to {}
+}
+
+@-webkit-keyframes moveToRight {
+  from {}
+  to { -webkit-transform: translateX(100%);}
+}
+
+@-webkit-keyframes moveFromLeft {
+  from { -webkit-transform: translateX(-100%);}
+  to {}
+}

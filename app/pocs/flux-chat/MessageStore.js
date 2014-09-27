@@ -57,6 +57,5 @@ define(function(require, exports, module) {
       break;
     }
   });
-  console.log('exporting message store ',MessageStore );
   $.extend(exports, MessageStore);
 });
