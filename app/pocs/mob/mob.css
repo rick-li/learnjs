@@ -38,6 +38,20 @@
     font-size: 30px;
     text-align: center;
  }
+ .page-title{
+    margin: 150px auto;
+    width: 100px;
+    height: 80px;
+    line-height: 80px;
+    border: solid 1px;
+    -webkit-transition: all 1s;
+ }
+
+ .page-title.enlarge{
+    width: 300px;
+    height: 300px;
+    line-height: 300px;
+ }
  .page.current {
    display: block;
    z-index: 10;

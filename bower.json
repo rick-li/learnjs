@@ -9,6 +9,7 @@
     "flux": "2.0.2",
     "immutable": "2.0.17",
     "alameda": "0.2.0",
+    "domReady": "latest",
     "requirejs-text": "latest",
     "jsx-requirejs-plugin": "0.3.0",
     "jquery-pjax": "latest",

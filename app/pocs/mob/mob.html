@@ -22,7 +22,8 @@
     <div class="left-nav"></div>
     <div class="page-wrapper">
       <div class="page page1 current" data-name="page1">
-        page1
+        <div class="page-title">page1</div>
+        
       </div>
       <div class="page page2" data-name="page2">
         page2
@@ -38,6 +39,10 @@
   $(function() {
     var currPageName = $('.current').data('name');
 
+
+    $('.page-title').click(function() {
+        $(this).toggleClass('enlarge');
+    });
     $('[data-target=' + currPageName + ']').addClass('selected');
     $('[data-target!=' + currPageName + ']').removeClass('selected');
     $('.top-nav div').click(function() {
